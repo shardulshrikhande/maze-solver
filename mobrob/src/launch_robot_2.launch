@@ -1,0 +1,22 @@
+<launch> 
+  <param name="path_file_svg" value="$(find mobrob)/src/robot1_path.svg" />
+  <rosparam command="load" file="$(find mobrob_util)/src/robot_info.yaml" />
+
+  <group ns="robot_operate">
+    <node pkg="mobrob" name="wheel_control_node" type="wheel_control_node.py"/>
+  </group>
+
+  <group ns="robot_estimate">
+    <node pkg="mobrob" name="dead_reckoning" type="dead_reckoning.py" />
+    <node pkg="mobrob" name="dead_reckoning_animator" type="mobile_robot_animator.py" >
+        <remap from="/robot_pose_simulated" to="/robot_pose_estimated"/>    
+    </node>
+  </group>
+
+  <group ns="robot_control">    
+    <node pkg="mobrob" name="waypoint_seeker" type="waypoint_seeker.py"/>
+    <node pkg="mobrob" name="closed_loop_path_follower" type="closed_loop_path_follower.py"/>
+    <node pkg="mobrob" name="maze_navigation" type="robot2-maze-navigation.py"/>
+  </group>
+  
+</launch>
